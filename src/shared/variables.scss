@@ -1,0 +1,19 @@
+// Global Colors
+$colors: (
+    'primary':      #1a202c,
+    'secondary':    #f84c00,
+    'tertiary':     #70b7ba,
+    'gray':         #6d7c7c,
+    'white':        #ffffff
+);
+
+$defaultLineHeight: 1.625;
+
+// Global Functions
+@function tint ($color, $percentage) {
+    @return mix(#ffffff, $color, $percentage);
+}
+
+@function shade ($color, $percentage) {
+    @return mix(#000000, $color, $percentage);
+}

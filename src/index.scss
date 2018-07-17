@@ -1,0 +1,11 @@
+@import './shared/global';
+@import './shared/typography';
+
+body {
+    background: map-get($colors,  'primary');
+    color: white;
+}
+
+a {
+    color: white;
+}
