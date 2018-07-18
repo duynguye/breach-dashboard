@@ -1,0 +1,14 @@
+.overlayContainer {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+.overlay {
+    background-color: shade(theme-color('primary'), 50%);
+    height: 100%;
+    opacity: 0.2;
+    width: 100%;
+}

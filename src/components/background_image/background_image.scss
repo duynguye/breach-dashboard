@@ -1,27 +1,18 @@
 .container {
     background-color: theme-color('primary');
-    height: 100vh;
-    position: relative;
-    z-index: 1;
-
-    &::before {
-        background-color: theme-color('primary');
-        content: '';
-        height: 100%;
-        left: 0;
-        mix-blend-mode: hard-light;
-        opacity: 1;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: 2;
-    }
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 2;
 }
 
 .background {
     background-size: cover;
     background-position: center;
     height: 100%;
+    opacity: 0.1;
     mix-blend-mode: luminosity;
     width: 100%;
 }

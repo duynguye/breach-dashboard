@@ -4,17 +4,10 @@ import classnames from 'classnames';
 // Components
 import Title from '../../components/title/title';
 import Notification from '../../components/notification/notification';
+import Overlay from '../../components/overlay/overlay';
 
 // Styles
-import { container, header, overlayContainer, overlay } from './container_header.scss';
-
-const Overlay = () => (
-    <div className={classnames('row', overlayContainer)}>
-        <div className={classnames('col-sm-7 offset-sm-1', overlay)}>
-            
-        </div>
-    </div>
-);
+import { container, header } from './container_header.scss';
 
 class HeaderContainer extends Component {
     render () {

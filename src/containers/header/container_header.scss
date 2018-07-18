@@ -8,20 +8,5 @@
 .header {
     height: 100%;
     position: relative;
-    z-index: 2;
-}
-
-.overlayContainer {
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 1;
-}
-
-.overlay {
-    background-color: shade(theme-color('primary'), 50%);
-    height: 100vh;
-    opacity: 0.5;
-    width: 100%;
+    z-index: 3;
 }
