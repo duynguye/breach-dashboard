@@ -1,5 +1,19 @@
 .container {
     background-color: theme-color('primary');
     color: theme-color('white');
+    flex: 1;
+    position: relative;
+}
+
+.contentRight {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    padding-left: $halfColumn;
+}
+
+.wrapper {
     height: 100%;
 }

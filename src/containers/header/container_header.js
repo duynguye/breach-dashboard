@@ -15,7 +15,7 @@ class HeaderContainer extends Component {
             <div className={classnames('container-fluid', container)}>
                 <div className={classnames('row', header)}>
                     <Title>EMM</Title>
-                    <Notification>@natalie is handling SRP-45694</Notification>
+                    <Notification>@digital diva is handling SRP-45694 - Coalition of Interlock Ignition Manufacturers</Notification>
                 </div>
 
                 <Overlay />

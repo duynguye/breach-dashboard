@@ -1,0 +1,38 @@
+.container {
+    margin-right: 3.5rem;
+
+    span {
+        color: theme-color('gray');
+        font-family: 'Saira Extra Condensed', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    p {
+        align-items: center;
+        color: theme-color('white');
+        display: flex;
+        justify-content: flex-start;
+        font-family: 'Saira Extra Condensed', sans-serif;
+        font-size: 1.7rem;
+        font-weight: 700;
+        letter-spacing: 5px;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    svg {
+        color: #ef233c;
+        font-size: 1.1rem;
+        margin-left: 0.4rem;
+    }
+}
+
+.active {
+    svg {
+        color: #4bff81;
+    }
+}

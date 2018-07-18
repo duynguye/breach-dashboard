@@ -1,0 +1,33 @@
+.container {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: $halfColumn;
+    position: relative;
+    transform: translateX(1rem);
+    z-index: 100;
+}
+
+.dot {
+    background-color: theme-color('gray');
+    border-radius: 50%;
+    height: 8px;
+    margin-right: 3.3rem;
+    position: relative;
+    width: 8px;
+
+    svg {
+        height: 35px;
+        left: 6px;
+        position: absolute;
+        top: 6px;
+        transform: translateX(-50%) translateY(-50%);
+        width: 35px;
+    }
+}
+
+.active {
+    background-color: theme-color('white');
+    height: 12px;
+    width: 12px;
+}

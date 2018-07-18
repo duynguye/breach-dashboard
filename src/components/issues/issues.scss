@@ -1,0 +1,123 @@
+.container {
+    padding-left: $halfColumn;
+    padding-right: $halfColumn;
+    padding-top: 6rem;
+}
+
+.issue {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: relative;
+
+    &:not(:last-of-type) {
+        &::after {
+            background-color: theme-color('gray');
+            content: '';
+            height: 1px;
+            margin: 3rem 0;
+            position: relative;
+            width: 100%;
+        }
+    }
+}
+
+.ticket {
+    flex: 3;
+    position: relative;
+
+    span {
+        color: theme-color('gray');
+        font-family: 'Saira Extra Condensed', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    p {
+        align-items: center;
+        color: theme-color('white');
+        display: flex;
+        justify-content: flex-start;
+        font-family: 'Saira Extra Condensed', sans-serif;
+        font-size: 4rem;
+        font-weight: 700;
+        letter-spacing: 5px;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    &::before {
+        background-color: theme-color('red');
+        border-radius: 10px;
+        content: '';
+        height: 100%;
+        left: -$halfColumn;
+        position: absolute;
+        transform: translateX(-50%);
+        width: 10px;
+        z-index: 10;
+    }
+}
+
+.inprogress {
+    &::before {
+        background-color: theme-color('green');
+    }
+}
+
+.station {
+    flex: 2;
+
+    span {
+        color: theme-color('gray');
+        font-family: 'Saira Extra Condensed', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    p {
+        align-items: center;
+        color: theme-color('white');
+        display: flex;
+        justify-content: flex-start;
+        font-family: 'Saira Extra Condensed', sans-serif;
+        font-size: 4rem;
+        font-weight: 700;
+        letter-spacing: 5px;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+}
+
+.status {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    justify-content: center;
+
+    svg {
+        color: theme-color('red');
+        font-size: 2.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    p {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+}
+
+.inactive {
+    svg {
+        color: theme-color('green');
+    }
+}
