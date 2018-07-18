@@ -1,0 +1,14 @@
+.title {
+    color: theme-color('white');
+    height: 100%;
+    position: relative;
+
+    h1 {
+        font-size: 7.33rem;
+        height: 100%;
+        left: 0;
+        line-height: 1.08;
+        position: absolute;
+        transform: translateX($halfColumn) translateY(50%);
+    }
+}

@@ -8,8 +8,13 @@ $colors: (
 );
 
 $defaultLineHeight: 1.625;
+$halfColumn: 8.3333vw / 2;
 
 // Global Functions
+@function theme-color($color) {
+    @return map-get($colors, $color);
+}
+
 @function tint ($color, $percentage) {
     @return mix(#ffffff, $color, $percentage);
 }
