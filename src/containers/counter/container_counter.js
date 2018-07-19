@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
+
+// Custom Component
+import Counter from '../../components/counter/counter';
+
+// Custom Styles
+import { container } from './container_counter.scss';
 
 class CounterContainer extends Component {
     render () {
         return (
-            <div className='col-sm-4'>
-                <span>^</span>
-                <h1 style={{ fontSize: '20rem', fontWeight: 100 }}>17</h1>
+            <div className={classnames('col-sm-4', container)}>
+                <Counter />
             </div>
         );
     }

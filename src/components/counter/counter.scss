@@ -1,0 +1,12 @@
+.container {
+    position: relative;
+
+    svg {
+        color: theme-color('red');
+        font-size: 4rem;
+        left: 50%;
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%) translateY(-100%);
+    }
+}

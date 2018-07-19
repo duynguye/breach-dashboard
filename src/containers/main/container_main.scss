@@ -1,5 +1,27 @@
 .container {
+    background-color: theme-color('primary');
     display: flex;
     flex-direction: column;
     height: 100%;
+}
+
+.progressBar {
+    svg {
+        border-radius: 100px;
+    }
+}
+
+.loadingText {
+    color: theme-color('white');
+    font-size: 8rem;
+    margin-bottom: 3rem;
+}
+
+.loadingScreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    padding: 10rem;
+    width: 100%;
 }

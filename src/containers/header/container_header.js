@@ -14,7 +14,7 @@ class HeaderContainer extends Component {
         return (
             <div className={classnames('container-fluid', container)}>
                 <div className={classnames('row', header)}>
-                    <Title>EMM</Title>
+                    <Title>WEB</Title>
                     <Notification>@digital diva is handling SRP-45694 - Coalition of Interlock Ignition Manufacturers</Notification>
                 </div>
 

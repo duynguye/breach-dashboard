@@ -28,7 +28,7 @@ class PaginationButton extends Component {
                 });
     
                 this.progress.path.setAttribute('stroke-linecap', 'round');
-                this.progress.animate(0.6);
+                this.progress.animate(1);
             }, 1500);
         }
     }
