@@ -79,13 +79,16 @@ app.post('/', (req, res) => {
         let payload = JSON.parse(req.body.payload);
 
         console.log(payload.user);
+        if (payload.user.id === 'U9A21T555') {
+            console.log('This user is Allison');
+        }
 
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify({
             "text": payload.original_message.text,
             "attachments": [{
                 "color": "#00FF00",
-                "text": `<@${payload.user.id}> is handling this breach.`
+                "text": `<@${payload.user.id}|Digital Diva> is handling this breach.`
             }]
         }));
     }
