@@ -5,6 +5,14 @@ const app = express();
 const http = require('http').Server(app);
 const WebSocket = require('ws');
 
+app.use(express.static('dist'));
+
+app.get('/dashboards', (req, res, next) => {
+    res.sendFile(__dirname + '/dist/index.html');
+});
+
+app.listen(process.env.PORT || 8000);
+
 const wss = new WebSocket.Server({
     port: 5000
 });
@@ -43,11 +51,3 @@ wss.on('connection', function connection (ws, req) {
         console.log('Client closed');
     });
 });
-
-app.use(express.static('dist'));
-
-app.get('/dashboards', (req, res, next) => {
-    res.sendFile(__dirname + '/dist/index.html');
-});
-
-app.listen(process.env.PORT || 8000);
