@@ -78,6 +78,8 @@ app.post('/', (req, res) => {
     } else {
         let payload = JSON.parse(req.body.payload);
 
+        console.log(payload.user.id);
+
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify({
             "text": payload.original_message.text,
