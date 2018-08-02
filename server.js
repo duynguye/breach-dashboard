@@ -77,10 +77,10 @@ app.post('/', (req, res) => {
         }));
     } else {
         let payload = JSON.parse(req.body.payload);
+        let text = `<@${payload.user.id}> is handling this breach.`;
 
-        console.log(payload.user);
         if (payload.user.id === 'U9A21T555') {
-            console.log('This user is Allison');
+            text = `Digital Diva is handling this breach.`;
         }
 
         res.setHeader('Content-Type', 'application/json');
@@ -88,7 +88,8 @@ app.post('/', (req, res) => {
             "text": payload.original_message.text,
             "attachments": [{
                 "color": "#00FF00",
-                "text": `<@${payload.user.id}|Digital Diva> is handling this breach.`
+                "text": text,
+                "image_url": "https://media.giphy.com/media/CpxCYD0Or2Ty8/giphy.gif"
             }]
         }));
     }
