@@ -78,7 +78,7 @@ app.post('/', (req, res) => {
     } else {
         let payload = JSON.parse(req.body.payload);
 
-        console.log(payload.user.id);
+        console.log(payload.user);
 
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify({
