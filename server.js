@@ -79,19 +79,27 @@ app.post('/', (req, res) => {
         let payload = JSON.parse(req.body.payload);
         let text = `<@${payload.user.id}> is handling this breach.`;
 
+        res.setHeader('Content-Type', 'application/json');
+
         if (payload.user.id === 'U9A21T555') {
             text = `Digital Diva is handling this breach.`;
+            res.send(JSON.stringify({
+                "text": payload.original_message.text,
+                "attachments": [{
+                    "color": "#00FF00",
+                    "text": text,
+                    "image_url": "https://media.giphy.com/media/CpxCYD0Or2Ty8/giphy.gif"
+                }]
+            }));
+        } else {
+            res.send(JSON.stringify({
+                "text": payload.original_message.text,
+                "attachments": [{
+                    "color": "#00FF00",
+                    "text": text,
+                }]
+            }));
         }
-
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({
-            "text": payload.original_message.text,
-            "attachments": [{
-                "color": "#00FF00",
-                "text": text,
-                "image_url": "https://media.giphy.com/media/CpxCYD0Or2Ty8/giphy.gif"
-            }]
-        }));
     }
 });
 
