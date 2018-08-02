@@ -1,4 +1,5 @@
 const path = require('path');
+const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
@@ -45,6 +46,8 @@ wss.on('connection', function connection (ws, req) {
 });
 
 app.use(express.static('dist'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.get('/dashboards', (req, res, next) => {
     res.sendFile(__dirname + '/dist/index.html');
