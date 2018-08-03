@@ -49,7 +49,7 @@ app.use(express.static('dist'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('/dashboards', (req, res, next) => {
+app.get('/dashboards/:id', (req, res, next) => {
     res.sendFile(__dirname + '/dist/index.html');
 });
 
