@@ -21,7 +21,7 @@ class FooterContainer extends Component {
 
                     <div className={classnames('col-sm-4', contentRight )}>
                         <Updates time={new Date()} isActive={true} />
-                        <Branding logo='/images/jira-white.svg' />
+                        <Branding logo={'/images/jira-white.png'} />
                     </div>
                 </div>
             </div>
