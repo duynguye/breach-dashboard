@@ -69,7 +69,7 @@ app.listen(process.env.PORT || 8000, () => {
     console.log(`App running on port ${process.env.PORT || 3000}!`);
 });
 
-const wss = new WebSocket.Server({ app });
+const wss = new WebSocket.Server({ noServer: true });
 
 wss.on('connection', function connection (ws, req) {
     console.log('A Client has Connected');
@@ -104,4 +104,10 @@ wss.on('connection', function connection (ws, req) {
     ws.on('close', () => {
         console.log('Client closed');
     });
+});
+
+app.on('upgrade', function upgrade (request, socket, head) {
+    wss.handleUpgrade(request, socket, head, function done (ws) {
+        wss.emit('connection', ws, request);
+    })
 });
