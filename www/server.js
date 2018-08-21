@@ -51,7 +51,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get('/dashboards/:id', (req, res, next) => {
-    res.sendFile(__dirname + '/dist/index.html');
+    res.sendFile(__dirname + '../dist/index.html');
 });
 
 app.post('/', (req, res) => {
