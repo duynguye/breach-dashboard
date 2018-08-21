@@ -7,7 +7,7 @@
     "devserver": "webpack-dev-server --mode development --open --hot --history-api-fallback",
     "server": "nodemon www/server.js",
     "dev": "webpack --mode development",
-    "build": "webpack --mode production",
+    "build": "webpack --mode production --progress --colors",
     "start": "node www/server.js"
   },
   "author": "",
