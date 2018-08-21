@@ -7,7 +7,7 @@ const http = require('http').Server(app);
 const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({
-    port: 5000
+    app
 });
 
 wss.on('connection', function connection (ws, req) {
