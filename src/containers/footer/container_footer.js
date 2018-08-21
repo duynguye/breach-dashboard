@@ -17,7 +17,7 @@ class FooterContainer extends Component {
                 <Overlay />
 
                 <div className={classnames('row', wrapper)}>
-                    <Pagination total={4} current={2} />
+                    <Pagination total={5} current={3} />
 
                     <div className={classnames('col-sm-4', contentRight )}>
                         <Updates time={new Date()} isActive={true} />
