@@ -45,7 +45,7 @@ class MainContainer extends Component {
         }
 
         // Try and establish a connection to the server.
-        const socket = new WebSocket('wss://apperture-dashboard.herokuapp.com:5000/');
+        const socket = new WebSocket('wss://apperture-dashboard.herokuapp.com/');
 
         socket.addEventListener('open', (event) => {
             console.log('Server connected!');
