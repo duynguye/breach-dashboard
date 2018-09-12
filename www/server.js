@@ -2,8 +2,10 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
+const fs = require('fs');
 
-const http = require('http').Server(app);
+const http = require('http');
+const https = require('https');
 const WebSocket = require('ws');
 
 app.use(express.static('dist'));
@@ -66,10 +68,18 @@ app.post('/', (req, res) => {
 });
 
 app.listen(process.env.PORT || 8000, () => {
-    console.log(`App running on port ${process.env.PORT || 3000}!`);
+    console.log(`App running on port ${process.env.PORT || 8000}!`);
 });
 
-const wss = new WebSocket.Server({ noServer: true });
+let options = {
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem')
+};
+
+const standard = http.createServer(app).listen(8001);
+const server = https.createServer(options, app).listen(8080);
+
+const wss = new WebSocket.Server({ server: server });
 
 wss.on('connection', function connection (ws, req) {
     console.log('A Client has Connected');
@@ -104,10 +114,4 @@ wss.on('connection', function connection (ws, req) {
     ws.on('close', () => {
         console.log('Client closed');
     });
-});
-
-app.on('upgrade', function upgrade (request, socket, head) {
-    wss.handleUpgrade(request, socket, head, function done (ws) {
-        wss.emit('connection', ws, request);
-    })
 });
