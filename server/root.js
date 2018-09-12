@@ -14,6 +14,10 @@ const wss = new WSServer({ server });
 // Global and Useful parameters
 const __PING__ = 0x9;
 const __PONG__ = 0xA;
+const __AUTH__ = 0x1b;
+const __LOGIN__ = 0x1c;
+const __SUCCESS__ = 0x1d;
+const __FAILED__ = 0x1e;
 
 function noop () {}
 
@@ -27,6 +31,17 @@ server.listen(process.env.PORT || 8443, function () {
 
 // On Connect
 function connection (ws) {
+    // Request Client Information
+    console.log('New Connection detected...');
+    console.log('Sending: __AUTH__');
+    
+    let payload = {
+        type: __AUTH__
+    };
+
+    ws.send(JSON.stringify(payload));
+
+    // Handle Incoming Messages
     ws.on('message', function incoming (message) {
         let data;
     
@@ -44,6 +59,13 @@ function connection (ws) {
                             console.log('Response successfully sent.');
                         }
                     });
+                }
+
+                if (data.type === __LOGIN__) {
+                    console.log('A client has sent credentials. Authenticating...');
+                    console.log('Client Location: ' + data.location);
+                    console.log('Sending: __SUCCESS__');
+                    ws.send(JSON.stringify({ type: __SUCCESS__ }));
                 }
             }
         } catch (e) {

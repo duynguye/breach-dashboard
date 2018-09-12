@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 
+// Redux
+import { connect } from 'react-redux';
+
 // Custom Components
 import Overlay from '../../components/overlay/overlay';
 import Branding from '../../components/branding/branding';
@@ -20,7 +23,7 @@ class FooterContainer extends Component {
                     <Pagination total={5} current={3} />
 
                     <div className={classnames('col-sm-4', contentRight )}>
-                        <Updates time={new Date()} isActive={true} />
+                        <Updates time={new Date()} isActive={this.props.connected} />
                         <Branding logo={'/images/jira-white.svg'} />
                     </div>
                 </div>
@@ -29,4 +32,8 @@ class FooterContainer extends Component {
     }
 }
 
-export default FooterContainer;
+const mapStateToProps = ({ connected }) => ({
+    connected
+});
+
+export default connect(mapStateToProps)(FooterContainer);
