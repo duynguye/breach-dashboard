@@ -11,6 +11,9 @@ const server = require('https').createServer(credentials, app);
 
 const wss = new WSServer({ server });
 
+const initializeJIRARequest = require('./jira').initializeJIRARequest;
+initializeJIRARequest();
+
 // Global and Useful parameters
 const __PING__ = 0x9;
 const __PONG__ = 0xA;

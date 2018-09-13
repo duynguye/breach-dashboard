@@ -2,7 +2,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
-const fs = require('fs');
 
 const http = require('http');
 const https = require('https');
@@ -67,51 +66,3 @@ app.post('/', (req, res) => {
     }
 });
 
-app.listen(process.env.PORT || 8000, () => {
-    console.log(`App running on port ${process.env.PORT || 8000}!`);
-});
-
-let options = {
-    key: fs.readFileSync('./key.pem'),
-    cert: fs.readFileSync('./cert.pem')
-};
-
-const standard = http.createServer(app).listen(8001);
-const server = https.createServer(options, app).listen(8080);
-
-const wss = new WebSocket.Server({ server: server });
-
-wss.on('connection', function connection (ws, req) {
-    console.log('A Client has Connected');
-    let text = 'Hello from the Server';
-
-    ws.on('message', function incoming (message) {
-        console.log('Recieved: %s', message);
-    });
-
-    ws.send(text, (error) => {
-       if (error === undefined) {
-           console.log('Message successfully sent');
-       }
-    });
-
-    this.isAlive = true;
-
-    ws.on('pong', () => {
-        this.isAlive = true;
-        console.log('Pong');
-    });
-
-    // setInterval(() => {
-    //     if (this.isAlive === false) {
-    //         return ws.terminate();
-    //     }
-
-    //     this.isAlive = false;
-    //     ws.ping(() => {});
-    // }, 1000);
-
-    ws.on('close', () => {
-        console.log('Client closed');
-    });
-});

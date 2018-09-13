@@ -23,7 +23,7 @@ class FooterContainer extends Component {
                     <Pagination total={5} current={3} />
 
                     <div className={classnames('col-sm-4', contentRight )}>
-                        <Updates time={new Date()} isActive={this.props.connected} />
+                        <Updates time={this.props.lastUpdate} isActive={this.props.connected} />
                         <Branding logo={'/images/jira-white.svg'} />
                     </div>
                 </div>
@@ -32,8 +32,8 @@ class FooterContainer extends Component {
     }
 }
 
-const mapStateToProps = ({ connected }) => ({
-    connected
+const mapStateToProps = ({ connected, lastUpdate }) => ({
+    connected, lastUpdate
 });
 
 export default connect(mapStateToProps)(FooterContainer);
