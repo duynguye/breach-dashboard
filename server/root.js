@@ -11,8 +11,15 @@ const server = require('https').createServer(credentials, app);
 
 const wss = new WSServer({ server });
 
+require('./models/issues');
+require('./database');
+
 const initializeJIRARequest = require('./jira').initializeJIRARequest;
-initializeJIRARequest();
+
+// Request the initial set of data from JIRA.
+initializeJIRARequest().then((results) => {
+    console.log(results);
+});
 
 // Global and Useful parameters
 const __PING__ = 0x9;
