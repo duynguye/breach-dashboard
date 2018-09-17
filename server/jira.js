@@ -52,137 +52,7 @@ async function initializeJIRARequest () {
             getBreaches('Email Marketing', EMM_REQUESTS),
             getBreaches('Email Marketing', EMM_REQUESTS)
         ]).then((response) => {
-            new Promise((resolve, reject) => {
-                response.map((data) => {
-                    const type = data.type;
-        
-                    let filtered = data.content.filter((issue) => {
-                        return issue.fields.customfield_12306.ongoingCycle || issue.fields.customfield_12108.ongoingCycle;
-                    });
-                    
-                    let results = filtered.map((issue) => {
-                        let key = issue.key.replace(/SRP-/g, '');
-                        let title = issue.fields.summary;
-                        let url = `https://jira.sinclairstoryline.com:8443/browse/SRP-${key}`;
-                        let station = issue.fields.customfield_11922.value;
-                        let pod = PODS.filter((pod) => {
-                            return pod.stations.includes(station);
-                        });
-                        let status = '';
-                        let isBreached = false;
-                        let remaining = 0;
-                        let paused = false;
-                        
-                        // Check if SLA Content Review is running
-                        if (issue.fields.customfield_12108.ongoingCycle) {
-                            isBreached = issue.fields.customfield_12108.ongoingCycle.breached;
-                            remaining = issue.fields.customfield_12108.ongoingCycle.remainingTime.millis;
-                            paused = issue.fields.customfield_12108.ongoingCycle.paused;
-                        }
-        
-                        // Check if SLA SRP to Respond is running
-                        if (issue.fields.customfield_12102.ongoingCycle && type !== 'Email Marketing') {
-                            // Ignore SLA SRP to Respond for Email Marketing
-                        }
-        
-                        // Check if SLA Production is running
-                        if (issue.fields.customfield_12306.ongoingCycle) {
-                            isBreached = issue.fields.customfield_12306.ongoingCycle.breached;
-                            remaining = issue.fields.customfield_12306.ongoingCycle.remainingTime.millis;
-                            paused = issue.fields.customfield_12306.ongoingCycle.paused;
-                        }
-        
-                        // Create the Object
-                        return {
-                            srp: parseInt(key),
-                            title,
-                            url,
-                            station,
-                            pod: pod[0].pod,
-                            isBreached,
-                            remaining,
-                            isPaused: paused
-                        };
-                    });
-        
-                    Issue.find({ type }).then((issues) => {
-                        if (issues.length > 0) {
-                            
-                            // Sort through the issues and see if there is a new or old one.
-                            let newItems = _.differenceBy(results, issues, 'srp');
-                            let oldItems = _.differenceBy(issues, results, 'srp');
-        
-                            // Temporary Logging System
-                            results.map((item) => console.log('From JIRA: SRP-' + item.srp));
-                            issues.map((item) => console.log('From DB: SRP-' + item.srp));
-        
-                            // Loop through all the issues from the DB and add new ones and remove old ones.
-                            issues.map((issue) => {
-                                // Add new Issue
-                                if (_.find(newItems, { srp: issue.srp })) {
-                                    console.log(`SRP-${issue.srp} is new and needs to be added.`);
-                                    new Issue({
-                                        srp: issue.srp,
-                                        type: type,
-                                        title: issue.title,
-                                        url: issue.url,
-                                        station: issue.station,
-                                        pod: issue.pod,
-                                        isBreached: issue.isBreached,
-                                        remaining: issue.remaining,
-                                        handler: '',
-                                        isPaused: issue.isPaused
-                                    }).save();
-                                }
-        
-                                // Remove old Issue
-                                if (_.find(oldItems, { srp: issue.srp })) {
-                                    console.log(`SRP-${issue.srp} is old and needs to be removed.`);
-                                    Issue.findByIdAndRemove({ _id: issue._id });
-                                }
-        
-                                // Otherwise update the DB with the new info from JIRA
-                                let jiraIssue = _.find(results, { srp: issue.srp });
-                                console.log('Working on: ', jiraIssue.srp);
-        
-                                Issue.findByIdAndUpdate({ _id: issue._id }, {
-                                    isBreached: issue.isBreached,
-                                    remaining: issue.remaining,
-                                    isPaused: issue.isPaused
-                                });
-        
-                                if (issue.isBreached !== jiraIssue.isBreached || issue.isPaused !== jiraIssue.isPaused) {
-                                    // Trigger Update Request
-                                }
-                            });
-                        } else {
-        
-                            // There are no issues in this category type. Just add them all.
-                            results.map((result) => {
-                                const { srp, title, url, station, pod, isBreached, remaining, isPaused } = result;
-                                
-                                new Issue({
-                                    srp,
-                                    type,
-                                    title,
-                                    url,
-                                    station,
-                                    pod,
-                                    isBreached,
-                                    remaining,
-                                    isPaused
-                                }).save();
-                            });
-                        }
-                    });
-        
-                    console.log('Done with the mapped portion.');
-                });
-    
-                resolve();
-            }); 
-    
-            console.log('End of the line');
+            console.log(response);
             resolve('Done');
         });
     });
@@ -200,16 +70,160 @@ function getBreaches (type, jql) {
                 'Authorization': auth,
                 'Content-Type': 'application/json'
             }
-        }).then((response) => {
+        }).then(async (response) => {
             let results = {
                 type: type,
                 total: response.data.total,
                 content: response.data.issues
             };
 
-            resolve(results);
+            let data = await handleData(results);
+
+            resolve(data);
 
         }).catch(error => reject(error));
+    });
+}
+
+function handleData (data) {
+    return new Promise(async (resolve, reject) => {
+        const type = data.type;
+    
+        let filtered = data.content.filter((issue) => {
+            return issue.fields.customfield_12306.ongoingCycle || issue.fields.customfield_12108.ongoingCycle;
+        });
+        
+        let results = filtered.map((issue) => {
+            let key = issue.key.replace(/SRP-/g, '');
+            let title = issue.fields.summary;
+            let url = `https://jira.sinclairstoryline.com:8443/browse/SRP-${key}`;
+            let station = issue.fields.customfield_11922.value;
+            let pod = PODS.filter((pod) => {
+                return pod.stations.includes(station);
+            });
+            let status = '';
+            let isBreached = false;
+            let remaining = 0;
+            let paused = false;
+            
+            // Check if SLA Content Review is running
+            if (issue.fields.customfield_12108.ongoingCycle) {
+                isBreached = issue.fields.customfield_12108.ongoingCycle.breached;
+                remaining = issue.fields.customfield_12108.ongoingCycle.remainingTime.millis;
+                paused = issue.fields.customfield_12108.ongoingCycle.paused;
+            }
+
+            // Check if SLA SRP to Respond is running
+            if (issue.fields.customfield_12102.ongoingCycle && type !== 'Email Marketing') {
+                // Ignore SLA SRP to Respond for Email Marketing
+            }
+
+            // Check if SLA Production is running
+            if (issue.fields.customfield_12306.ongoingCycle) {
+                isBreached = issue.fields.customfield_12306.ongoingCycle.breached;
+                remaining = issue.fields.customfield_12306.ongoingCycle.remainingTime.millis;
+                paused = issue.fields.customfield_12306.ongoingCycle.paused;
+            }
+
+            // Create the Object
+            return {
+                srp: parseInt(key),
+                title,
+                url,
+                station,
+                pod: pod[0].pod,
+                isBreached,
+                remaining,
+                isPaused: paused
+            };
+        });
+
+        await Issue.find({ type }).then(async (issues) => {
+            if (issues.length > 0) {
+                
+                // Sort through the issues and see if there is a new or old one.
+                let newItems = _.differenceBy(results, issues, 'srp');
+                let oldItems = _.differenceBy(issues, results, 'srp');
+
+                // Temporary Logging System
+                results.map((item) => console.log('From JIRA: SRP-' + item.srp));
+                issues.map((item) => console.log('From DB: SRP-' + item.srp));
+
+                // Loop through all the issues from the DB and add new ones and remove old ones.
+                await issues.map(async (issue) => {
+                    // Add new Issue
+                    if (_.find(newItems, { srp: issue.srp })) {
+                        console.log(`SRP-${issue.srp} is new and needs to be added.`);
+                        // new Issue({
+                        //     srp: issue.srp,
+                        //     type: type,
+                        //     title: issue.title,
+                        //     url: issue.url,
+                        //     station: issue.station,
+                        //     pod: issue.pod,
+                        //     isBreached: issue.isBreached,
+                        //     remaining: issue.remaining,
+                        //     handler: '',
+                        //     isPaused: issue.isPaused
+                        // }).save();
+                        addIssue(issue).then((response) => {
+                            console.log('Issue Added!');
+                        });
+                    }
+
+                    // Remove old Issue
+                    if (_.find(oldItems, { srp: issue.srp })) {
+                        console.log(`SRP-${issue.srp} is old and needs to be removed.`);
+                        await Issue.findByIdAndRemove({ _id: issue._id });
+                    }
+
+                    // Otherwise update the DB with the new info from JIRA
+                    let jiraIssue = _.find(results, { srp: issue.srp });
+                    console.log('Working on: ', jiraIssue.srp);
+
+                    await Issue.findByIdAndUpdate({ _id: issue._id }, {
+                        isBreached: issue.isBreached,
+                        remaining: issue.remaining,
+                        isPaused: issue.isPaused
+                    });
+
+                    if (issue.isBreached !== jiraIssue.isBreached || issue.isPaused !== jiraIssue.isPaused) {
+                        // Trigger Update Request
+                    }
+                });
+
+                resolve(true);
+            } else {
+
+                // There are no issues in this category type. Just add them all.
+                results.map((result) => {
+                    addIssue(result);
+                });
+
+                resolve();
+            }
+        }); 
+    });
+}
+
+function addIssue (issue) {
+    return new Promise((resolve, reject) => {
+        const { srp, title, url, station, pod, isBreached, remaining, isPaused } = issue;
+                            
+        new Issue({
+            srp,
+            type,
+            title,
+            url,
+            station,
+            pod,
+            isBreached,
+            remaining,
+            isPaused,
+            handler: ''
+        }).save().then(() => {
+            resolve(true);
+        });
     });
 }
 
