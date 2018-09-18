@@ -1,4 +1,5 @@
 // Setup Credentials
+const _ = require('lodash');
 const fs = require('fs');
 const private_key = fs.readFileSync('./server/certificates/localhost.key', 'utf8');
 const certificate = fs.readFileSync('./server/certificates/localhost.crt', 'utf8');
@@ -30,6 +31,9 @@ const __SUCCESS__ = 0x1d;
 const __FAILED__ = 0x1e;
 
 function noop () {}
+
+// Collection of Clients
+let clients = [];
 
 // Handle Connection
 wss.on('connection', connection);
@@ -76,6 +80,15 @@ function connection (ws) {
                     console.log('Client Location: ' + data.location);
                     console.log('Sending: __SUCCESS__');
                     ws.send(JSON.stringify({ type: __SUCCESS__ }));
+
+                    if (!_.find(clients, { id: data.location })) {
+                        clients.push({
+                            handle: ws,
+                            id: data.location,
+                            types: ['Email Marketing'],
+                            active: true
+                        });
+                    }
                 }
             }
         } catch (e) {
@@ -83,3 +96,13 @@ function connection (ws) {
         }
     });
 }
+
+async function pushContent () {
+    await initializeJIRARequest().then((response) => {
+        clients.map((client) => {
+            console.log('Pushing to client: ' + client.id);
+        });
+    });
+};
+
+setInterval(pushContent, 300000);

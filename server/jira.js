@@ -52,8 +52,7 @@ async function initializeJIRARequest () {
             getBreaches('Email Marketing', EMM_REQUESTS),
             getBreaches('Email Marketing', EMM_REQUESTS)
         ]).then((response) => {
-            console.log(response);
-            resolve('Done');
+            resolve(response);
         });
     });
 }
@@ -78,7 +77,6 @@ function getBreaches (type, jql) {
             };
 
             let data = await handleData(results);
-
             resolve(data);
 
         }).catch(error => reject(error));
@@ -154,18 +152,7 @@ function handleData (data) {
                     // Add new Issue
                     if (_.find(newItems, { srp: issue.srp })) {
                         console.log(`SRP-${issue.srp} is new and needs to be added.`);
-                        // new Issue({
-                        //     srp: issue.srp,
-                        //     type: type,
-                        //     title: issue.title,
-                        //     url: issue.url,
-                        //     station: issue.station,
-                        //     pod: issue.pod,
-                        //     isBreached: issue.isBreached,
-                        //     remaining: issue.remaining,
-                        //     handler: '',
-                        //     isPaused: issue.isPaused
-                        // }).save();
+                        
                         addIssue(issue).then((response) => {
                             console.log('Issue Added!');
                         });
@@ -192,7 +179,10 @@ function handleData (data) {
                     }
                 });
 
-                resolve(true);
+                resolve({
+                    type: data.type,
+                    needsUpdate: true
+                });
             } else {
 
                 // There are no issues in this category type. Just add them all.
@@ -200,7 +190,10 @@ function handleData (data) {
                     addIssue(result);
                 });
 
-                resolve();
+                resolve({
+                    type: data.type,
+                    needsUpdate: true
+                });
             }
         }); 
     });
