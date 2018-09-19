@@ -1,10 +1,11 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
 import ProgressBar from 'progressbar.js';
 
 // Import Redux
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setConnectionStatus } from '../../actions';
+import { setConnectionStatus, setLastUpdate, addIssue, removeIssue } from '../../actions';
 
 // Import Containers
 import HeaderContainer from '../header/container_header';
@@ -109,6 +110,34 @@ class MainContainer extends Component {
             if (data.type === __PONG__) {
 
             }
+
+            // Listen for Updates
+            if (data.type === 0x1f) {
+                this.props.setLastUpdate(new Date());
+                console.log('Got new data: ', data);
+
+                // For now assume there is only 1 group.
+                const currentIssues = this.props.issues;
+                const pendingIssues = data.payload[0];
+                
+                // Check to see what is new and what needs to be removed.
+                let oldItems = _.differenceBy(currentIssues, pendingIssues, 'srp');
+                let newItems = _.differenceBy(pendingIssues, currentIssues, 'srp');
+                
+                console.log('New: ', newItems);
+                console.log('Old: ', oldItems);
+
+                if (newItems.length > 0) {
+                    console.log('Adding new issues.');
+                    newItems.map(issue => this.props.addIssue(issue));
+                }
+
+                if (oldItems.length > 0) {
+                    oldItems.map(issue => this.props.removeIssue(issue.srp));
+                }
+
+                console.log(this.props.issues);
+            }
         });
 
         socket.addEventListener('close', (event) => {
@@ -147,8 +176,12 @@ class MainContainer extends Component {
     }
 }
 
+const mapStateToProps = ({ issues }) => ({
+    issues
+});
+
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ setConnectionStatus }, dispatch);
+    return bindActionCreators({ setConnectionStatus, setLastUpdate, addIssue, removeIssue }, dispatch);
 }
 
-export default connect(null, mapDispatchToProps)(MainContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

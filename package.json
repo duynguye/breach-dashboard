@@ -55,6 +55,7 @@
     "file-loader": "^1.1.11",
     "mongoose": "^5.2.14",
     "nodemon": "^1.18.2",
+    "redux-devtools-extension": "^2.13.5",
     "url-loader": "^1.0.1"
   }
 }

@@ -1,15 +1,15 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUp } from '@fortawesome/pro-regular-svg-icons';
+import { faArrowUp, faArrowDown } from '@fortawesome/pro-regular-svg-icons';
 
 // Custom Stlyes
 import { container } from './counter.scss';
 
-const Counter = () => {
+const Counter = ({ total, direction }) => {
     return (
         <div className={container}>
-            <FontAwesomeIcon icon={faArrowUp} />
-            <h1 style={{ fontSize: '20rem', fontWeight: 100 }}>5</h1>
+            <FontAwesomeIcon icon={ direction === 'up' ? faArrowUp : faArrowDown } className={ direction === 'up' ? 'up' : 'down' } />
+            <h1 style={{ fontSize: '20rem', fontWeight: 100 }}>{total}</h1>
         </div>
     );
 };

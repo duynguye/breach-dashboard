@@ -118,6 +118,7 @@ function handleData (data) {
 
             // Check if SLA Production is running
             if (issue.fields.customfield_12306.ongoingCycle) {
+                console.log('Pulling from production: ', key);
                 isBreached = issue.fields.customfield_12306.ongoingCycle.breached;
                 remaining = issue.fields.customfield_12306.ongoingCycle.remainingTime.millis;
                 paused = issue.fields.customfield_12306.ongoingCycle.paused;
@@ -166,13 +167,13 @@ function handleData (data) {
 
                     // Otherwise update the DB with the new info from JIRA
                     let jiraIssue = _.find(results, { srp: issue.srp });
-                    console.log('Working on: ', jiraIssue.srp);
+                    console.log('Working on: ', jiraIssue.srp + ' with remaining time: ' + jiraIssue.remaining + ' and is paused: ' + jiraIssue.isPaused);
 
-                    await Issue.findByIdAndUpdate({ _id: issue._id }, {
-                        isBreached: issue.isBreached,
-                        remaining: issue.remaining,
-                        isPaused: issue.isPaused
-                    });
+                    await Issue.findByIdAndUpdate({ _id: issue._id }, { $set: {
+                        isBreached: jiraIssue.isBreached,
+                        remaining: jiraIssue.remaining,
+                        isPaused: jiraIssue.isPaused
+                    }});
 
                     if (issue.isBreached !== jiraIssue.isBreached || issue.isPaused !== jiraIssue.isPaused) {
                         // Trigger Update Request

@@ -7,14 +7,20 @@ const credentials = { key: private_key, cert: certificate };
 
 // Setup the WebSocket Server
 const app = require('./server');
+const WebSocket = require('ws');
 const WSServer = require('ws').Server;
 const server = require('https').createServer(credentials, app);
 
 const wss = new WSServer({ server });
 
+// Database Specific
 require('./models/issues');
 require('./database');
 
+const mongoose = require('mongoose');
+const Issue = mongoose.model('issues');
+
+// Get the JIRA request function
 const initializeJIRARequest = require('./jira').initializeJIRARequest;
 
 // Request the initial set of data from JIRA.
@@ -29,6 +35,7 @@ const __AUTH__ = 0x1b;
 const __LOGIN__ = 0x1c;
 const __SUCCESS__ = 0x1d;
 const __FAILED__ = 0x1e;
+const __UPDATE__ = 0x1f;
 
 function noop () {}
 
@@ -99,10 +106,28 @@ function connection (ws) {
 
 async function pushContent () {
     await initializeJIRARequest().then((response) => {
-        clients.map((client) => {
-            console.log('Pushing to client: ' + client.id);
+        clients.map(async (client) => {
+            const { id, handle, types, active } = client;
+            console.log('Pushing to client: ' + id);
+
+            if (client.active && client.handle.readyState === WebSocket.OPEN) {
+                let data = types.map(async (type) => {
+                    let result =  await Issue.find({ type }).then((response) => {
+                        return response;
+                    });
+
+                    return result;
+                });
+
+                Promise.all(data).then((results) => {
+                    client.handle.send(JSON.stringify({
+                        type: __UPDATE__,
+                        payload: results
+                    }));
+                });
+            }
         });
     });
 };
 
-setInterval(pushContent, 300000);
+setInterval(pushContent, 60000);
