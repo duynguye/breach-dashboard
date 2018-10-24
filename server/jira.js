@@ -79,7 +79,10 @@ function getBreaches (type, jql) {
             let data = await handleData(results);
             resolve(data);
 
-        }).catch(error => reject(error));
+        }).catch((error) => {
+            console.error('Error from JIRA: ', error);
+            reject(error);
+        });
     });
 }
 
@@ -95,10 +98,17 @@ function handleData (data) {
             let key = issue.key.replace(/SRP-/g, '');
             let title = issue.fields.summary;
             let url = `https://jira.sinclairstoryline.com:8443/browse/SRP-${key}`;
-            let station = issue.fields.customfield_11922.value;
-            let pod = PODS.filter((pod) => {
-                return pod.stations.includes(station);
-            });
+            let station = '';
+            let pod = '';
+
+            if (issue.fields.customfield_11922) {
+                station = issue.fields.customfield_11922.value;
+                
+                pod = PODS.filter((pod) => {
+                    return pod.stations.includes(station);
+                });
+            } 
+
             let status = '';
             let isBreached = false;
             let remaining = 0;
@@ -130,7 +140,7 @@ function handleData (data) {
                 title,
                 url,
                 station,
-                pod: pod[0].pod,
+                pod: (pod ? pod[0].pod : 0),
                 isBreached,
                 remaining,
                 isPaused: paused
@@ -188,7 +198,7 @@ function handleData (data) {
 
                 // There are no issues in this category type. Just add them all.
                 results.map((result) => {
-                    addIssue(result);
+                    addIssue(result, type);
                 });
 
                 resolve({
@@ -196,11 +206,14 @@ function handleData (data) {
                     needsUpdate: true
                 });
             }
+        }).catch((error) =>{
+            console.error('Error with Issue: ', error);
+            throw error;
         }); 
     });
 }
 
-function addIssue (issue) {
+function addIssue (issue, type) {
     return new Promise((resolve, reject) => {
         const { srp, title, url, station, pod, isBreached, remaining, isPaused } = issue;
                             

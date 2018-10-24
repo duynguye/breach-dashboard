@@ -5,7 +5,7 @@ import ProgressBar from 'progressbar.js';
 // Import Redux
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { setConnectionStatus, setLastUpdate, addIssue, removeIssue } from '../../actions';
+import { setConnectionStatus, setLastUpdate, addIssue, removeIssue, setTitle } from '../../actions';
 
 // Import Containers
 import HeaderContainer from '../header/container_header';
@@ -26,6 +26,7 @@ const __AUTH__ = 0x1b;
 const __LOGIN__ = 0x1c;
 const __SUCCESS__ = 0x1d;
 const __FAILED__ = 0x1e;
+const __UPDATE__ = 0x1f;
 
 class MainContainer extends Component {
     constructor (props) {
@@ -112,9 +113,17 @@ class MainContainer extends Component {
             }
 
             // Listen for Updates
-            if (data.type === 0x1f) {
+            if (data.type === __UPDATE__) {
                 this.props.setLastUpdate(new Date());
                 console.log('Got new data: ', data);
+
+                // Figure out what kind of data was received.
+                const type = data.payload[0][0].type;
+                console.log('Current Type: ', type);
+
+                if (type === 'Email Marketing') {
+                    this.props.setTitle('EMM');
+                }
 
                 // For now assume there is only 1 group.
                 const currentIssues = this.props.issues;
@@ -181,7 +190,7 @@ const mapStateToProps = ({ issues }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ setConnectionStatus, setLastUpdate, addIssue, removeIssue }, dispatch);
+    return bindActionCreators({ setConnectionStatus, setLastUpdate, addIssue, removeIssue, setTitle }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer);

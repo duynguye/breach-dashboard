@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://ds255332.mlab.com:55332/apperture-dashboards', { 
-    auth: {
-        user: 'apperture',
-        password: '6hWk%86t4h!M'
-    },
+mongoose.connect('mongodb+srv://apperture_api:2myyWhJ69k87nUR@apperture-s1ojt.mongodb.net/test?retryWrites=true', {
     useNewUrlParser: true 
+}, (error) => {
+    if (error) {
+        console.error('Unable to connect to MongoDB Atlas');
+        throw error;
+    } else {
+        console.log('Successfully connected to MongoDB Atlas');
+    }  
 });
 
 module.exports = mongoose.connection;

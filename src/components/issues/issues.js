@@ -43,6 +43,12 @@ const Issue = ({ srp, pod, callLetters, running, handled, remaining }) => {
     );
 };
 
+const IssueSheet = ({ children }) => (
+    <div className='issueSheet'>
+        {children}
+    </div>
+)
+
 class Issues extends Component {
     constructor (props) {
         super(props);

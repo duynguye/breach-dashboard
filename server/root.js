@@ -24,6 +24,7 @@ const Issue = mongoose.model('issues');
 const initializeJIRARequest = require('./jira').initializeJIRARequest;
 
 // Request the initial set of data from JIRA.
+console.log('Initializing First JIRA Request');
 initializeJIRARequest().then((results) => {
     console.log(results);
 });

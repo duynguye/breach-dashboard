@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 // Components
@@ -14,8 +15,8 @@ class HeaderContainer extends Component {
         return (
             <div className={classnames('container-fluid', container)}>
                 <div className={classnames('row', header)}>
-                    <Title>WEB</Title>
-                    <Notification>@digital diva is handling SRP-45694 - Coalition of Interlock Ignition Manufacturers</Notification>
+                    <Title>{ this.props.title }</Title>
+                    <Notification></Notification>
                 </div>
 
                 <Overlay />
@@ -24,4 +25,8 @@ class HeaderContainer extends Component {
     }
 }
 
-export default HeaderContainer;
+const mapStateToProps = ({ title }) => ({
+    title
+});
+
+export default connect(mapStateToProps, null)(HeaderContainer);
