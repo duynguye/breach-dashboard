@@ -131,15 +131,10 @@ async function pushContent () {
     });
 };
 
-function sendHeartbeat () {
-    clients.map((client) => {
-        if (client.active && client.handle.readyState === WebSocket.OPEN) {
-            client.handle.send(JSON.stringify({
-                type: __PING__
-            }));
-        }
+setInterval(() => {
+    wss.clients.forEach((client) => {
+        client.send(new Date().toTimeString());
     });
-}
+}, 1000);
 
 setInterval(pushContent, 60000);
-setInterval(sendHeartbeat, 15000);
