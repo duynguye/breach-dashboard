@@ -100,32 +100,36 @@ function connection (ws) {
                 }
 
                 if (data.type === __UPDATE__) {
-                    await initializeJIRARequest().then((response) => {
-                        const client = _.find(clients, { id: data.location });
-                        const { id, handle, types, active } = client;
-                        console.log('Pushing to client: ' + id);
-                
-                        if (client.active && client.handle.readyState === WebSocket.OPEN) {
-                            let data = types.map(async (type) => {
-                                let result =  await Issue.find({ type }).then((response) => {
-                                    return response;
-                                });
-            
-                                return result;
-                            });
-            
-                            Promise.all(data).then((results) => {
-                                client.handle.send(JSON.stringify({
-                                    type: __UPDATE__,
-                                    payload: results
-                                }));
-                            });
-                        }
-                    });
+                    const client = _.find(clients, { id: data.location });
+                    pushContentSingle(client);
                 }
             }
         } catch (e) {
             console.error('Error occured, not a valid JSON data.');
+        }
+    });
+}
+
+async function pushContentSingle (client) {
+    await initializeJIRARequest().then((response) => {
+        const { id, handle, types, active } = client;
+        console.log('Pushing to client: ' + id);
+
+        if (client.active && client.handle.readyState === WebSocket.OPEN) {
+            let data = types.map(async (type) => {
+                let result =  await Issue.find({ type }).then((response) => {
+                    return response;
+                });
+
+                return result;
+            });
+
+            Promise.all(data).then((results) => {
+                client.handle.send(JSON.stringify({
+                    type: __UPDATE__,
+                    payload: results
+                }));
+            });
         }
     });
 }
