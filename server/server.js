@@ -13,7 +13,7 @@ app.get('/', function (req, res) {
     res.sendStatus(200);
 });
 
-app.get('/dashboards/:id', (req, res, next) => {
+app.get('/dashboards', (req, res, next) => {
     res.sendFile(path.resolve('dist/index.html'));
 });
 
