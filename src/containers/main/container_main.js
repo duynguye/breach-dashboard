@@ -61,7 +61,7 @@ class MainContainer extends Component {
 
     initializeConnection () {
         // Try and establish a connection to the server.
-        let socket = new WebSocket('wss://localhost:8443/');
+        let socket = new WebSocket('wss://apperture-dashboard.herokuapp.com/');
 
         // Loading Screen
         socket.addEventListener('open', (event) => {
