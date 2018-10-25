@@ -104,7 +104,12 @@ class MainContainer extends Component {
                     this.setState({
                         isLoading: false
                     }, () => this.props.setConnectionStatus(true));
-                })
+                });
+
+                socket.send(JSON.stringify({
+                    type: __UPDATE__,
+                    location: 1
+                }));
             }
 
             // Listen for the heartbeat
