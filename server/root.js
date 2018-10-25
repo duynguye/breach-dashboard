@@ -1,15 +1,15 @@
 // Setup Credentials
 const _ = require('lodash');
 const fs = require('fs');
-const private_key = fs.readFileSync('./server/certificates/localhost.key', 'utf8');
-const certificate = fs.readFileSync('./server/certificates/localhost.crt', 'utf8');
-const credentials = { key: private_key, cert: certificate };
+// const private_key = fs.readFileSync('./server/certificates/localhost.key', 'utf8');
+// const certificate = fs.readFileSync('./server/certificates/localhost.crt', 'utf8');
+// const credentials = { key: private_key, cert: certificate };
 
 // Setup the WebSocket Server
 const app = require('./server');
 const WebSocket = require('ws');
 const WSServer = require('ws').Server;
-const server = require('https').createServer(credentials, app);
+const server = require('http').createServer(app);
 
 const wss = new WSServer({ server });
 
